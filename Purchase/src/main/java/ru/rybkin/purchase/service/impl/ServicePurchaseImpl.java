@@ -2,6 +2,10 @@ package ru.rybkin.purchase.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.rybkin.purchase.api.exceptions.NotFoundException;
+import ru.rybkin.purchase.component.GenerateMessage;
+import ru.rybkin.purchase.component.SendMessage;
+import ru.rybkin.purchase.dto.DtoMessage;
 import ru.rybkin.purchase.entities.SubscriptionURL;
 import ru.rybkin.purchase.repositories.RepoSubscriptionURL;
 import ru.rybkin.purchase.service.ServicePurchase;
@@ -11,30 +15,61 @@ import ru.rybkin.purchase.service.ServicePurchase;
 public class ServicePurchaseImpl implements ServicePurchase {
 
     private final RepoSubscriptionURL repoSubscriptionURL;
+    private final GenerateMessage generateMessage;
+    private final SendMessage sendMessage;
 
-    public ServicePurchaseImpl(RepoSubscriptionURL repoSubscriptionURL) {
+    public ServicePurchaseImpl(RepoSubscriptionURL repoSubscriptionURL,
+                               GenerateMessage generateMessage,
+                               SendMessage sendMessage) {
         this.repoSubscriptionURL = repoSubscriptionURL;
+        this.generateMessage = generateMessage;
+        this.sendMessage = sendMessage;
     }
 
     @Override
     public void addSub(String name, String url) {
         SubscriptionURL entity = new SubscriptionURL();
 
-//        entity.set
-//
-//        repoSubscriptionURL.save();
+        if (name != null && url != null) {
+            entity.setName(name);
+            entity.setUrl(url);
+        }
+
+        entity = repoSubscriptionURL.saveAndFlush(entity);
+        log.debug("  _. add new Subscription with id: {}", entity.getId());
     }
 
     @Override
     public void updateSub(String name, String url) {
+
+        SubscriptionURL entity = repoSubscriptionURL.findByName(name)
+                .orElseThrow(() -> new NotFoundException(name, SubscriptionURL.class.getName()));
+
+        if (url != null) {
+            entity.setUrl(url);
+        }
+
+        repoSubscriptionURL.saveAndFlush(entity);
+        log.debug("  _. update Subscription with id: {}", entity.getId());
     }
 
     @Override
     public void removeSub(String name) {
+
+        if (repoSubscriptionURL.existsByName(name)) {
+            repoSubscriptionURL.deleteByName(name);
+        } else {
+            throw new NotFoundException(name, SubscriptionURL.class.getName());
+        }
     }
+
+    /**
+     * оповестить подписчиков
+     */
 
     @Override
     public void notifySub() {
+        DtoMessage dto = generateMessage.generate();
 
     }
 }
