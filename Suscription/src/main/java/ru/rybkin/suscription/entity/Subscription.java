@@ -1,32 +1,26 @@
-package ru.rybkin.purchase.dto;
+package ru.rybkin.suscription.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoMessage {
+@Entity
+@Table(name = "SUBSCRIPTION")
+public class Subscription {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /**
-     * уникальный номер абонента
-     */
     private Integer msisdn;
 
-    /**
-     * тип сообщения PURCHASE или SUBSCRIPTION
-     */
-    private String action;
-
-    /**
-     * UNIX timestamp
-     */
     private Timestamp timestamp;
 }
