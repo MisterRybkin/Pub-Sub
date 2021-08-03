@@ -1,0 +1,10 @@
+POST http://localhost:8080/purchase/
+Content-Type: application/json
+
+{
+  "name": "sub1",
+  "url": "http://localhost:8090/api/subscription/"
+}
+
+###
+GET http://localhost:8080/purchase/notify

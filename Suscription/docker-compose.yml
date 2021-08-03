@@ -1,0 +1,12 @@
+version: '2'
+services:
+  db:
+    image: postgres:12.4-alpine
+    container_name: subscription.db
+    hostname: db
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - 65433:5432
+    env_file:
+      - .env

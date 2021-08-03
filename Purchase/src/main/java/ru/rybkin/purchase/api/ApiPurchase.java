@@ -7,12 +7,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.rybkin.purchase.service.ServicePurchase;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Slf4j
 @RestController
 @Validated
-@RequestMapping("/purchase")
+@RequestMapping("api/purchase")
 public class ApiPurchase {
 
     private final ServicePurchase servicePurchase;
@@ -26,8 +27,8 @@ public class ApiPurchase {
      * @return
      */
     @PostMapping("/")
-    public ResponseEntity<HttpStatus> addSub(@RequestBody @NotEmpty String name,
-                                             @RequestBody @NotEmpty String url) {
+    public ResponseEntity<HttpStatus> addSub(@RequestBody @NotBlank String name,
+                                             @RequestBody @NotBlank String url) {
         log.info("-> add: Subscription name: {}, url: {}", name, url);
         servicePurchase.addSub(name, url);
         log.info("<- add: Subscription name: {}, url: {}", name, url);
@@ -40,7 +41,7 @@ public class ApiPurchase {
      */
     @PutMapping("/{name}")
     public ResponseEntity<HttpStatus> updateSub(@PathVariable String name,
-                                                @RequestBody @NotEmpty String url) {
+                                                @RequestBody @NotBlank String url) {
         log.info("-> update: Subscription name: {}, url: {}", name, url);
         servicePurchase.updateSub(name, url);
         log.info("<- update: Subscription name: {}, url: {}", name, url);
@@ -53,7 +54,7 @@ public class ApiPurchase {
      * @return
      */
     @DeleteMapping("/")
-    public ResponseEntity<HttpStatus> removeSub(@RequestBody @NotEmpty String name) {
+    public ResponseEntity<HttpStatus> removeSub(@RequestBody @NotBlank String name) {
         log.info("-> remove: Subscription name: {}", name);
         servicePurchase.removeSub(name);
         log.info("<- remove: Subscription name: {}", name);
@@ -61,7 +62,7 @@ public class ApiPurchase {
     }
 
     /**
-     * сгенерировать сообщения для подписчиков
+     * сгенерировать сообщение для подписчиков
      * @return
      */
     @GetMapping("/notify")

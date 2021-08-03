@@ -10,6 +10,8 @@ import ru.rybkin.purchase.entities.SubscriptionURL;
 import ru.rybkin.purchase.repositories.RepoSubscriptionURL;
 import ru.rybkin.purchase.service.ServicePurchase;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class ServicePurchaseImpl implements ServicePurchase {
@@ -64,12 +66,18 @@ public class ServicePurchaseImpl implements ServicePurchase {
     }
 
     /**
-     * оповестить подписчиков
+     * отправить сообщения
      */
 
     @Override
     public void notifySub() {
-        DtoMessage dto = generateMessage.generate();
+        List<SubscriptionURL> urlList = repoSubscriptionURL.findAll();
 
+        if (!urlList.isEmpty()) {
+            DtoMessage dto = generateMessage.generate();
+            sendMessage.send(dto);
+            log.debug(" _. successful sending message");
+        }
+        //после каждой с url
     }
 }

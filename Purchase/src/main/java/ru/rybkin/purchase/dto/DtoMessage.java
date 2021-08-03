@@ -1,5 +1,6 @@
 package ru.rybkin.purchase.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DtoMessage {
 
     private Integer id;
@@ -29,4 +31,14 @@ public class DtoMessage {
      * UNIX timestamp
      */
     private Timestamp timestamp;
+
+    @Override
+    public String toString() {
+        return "DtoMessage{" +
+                "id=" + id +
+                ", msisdn=" + msisdn +
+                ", action='" + action + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }
