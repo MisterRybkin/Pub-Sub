@@ -1,4 +1,4 @@
-POST http://localhost:8080/purchase/
+POST http://localhost:8080/api/purchase/
 Content-Type: application/json
 
 {
@@ -6,5 +6,5 @@ Content-Type: application/json
   "url": "http://localhost:8090/api/subscription/"
 }
 
-###
+### отправить сообщения
 GET http://localhost:8080/api/purchase/notify

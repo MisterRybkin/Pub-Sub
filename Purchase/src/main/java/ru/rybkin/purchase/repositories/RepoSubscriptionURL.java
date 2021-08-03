@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface RepoSubscriptionURL extends JpaRepository<SubscriptionURL, Integer> {
 
     Optional<SubscriptionURL> findByName(String name);
+    SubscriptionURL getByName(String name);
     void deleteByName(String name);
     boolean existsByName(String name);
 }

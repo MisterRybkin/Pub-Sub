@@ -6,6 +6,7 @@ import ru.rybkin.purchase.api.exceptions.NotFoundException;
 import ru.rybkin.purchase.component.GenerateMessage;
 import ru.rybkin.purchase.component.SendMessage;
 import ru.rybkin.purchase.dto.DtoMessage;
+import ru.rybkin.purchase.dto.DtoSubscriber;
 import ru.rybkin.purchase.entities.SubscriptionURL;
 import ru.rybkin.purchase.repositories.RepoSubscriptionURL;
 import ru.rybkin.purchase.service.ServicePurchase;
@@ -29,30 +30,18 @@ public class ServicePurchaseImpl implements ServicePurchase {
     }
 
     @Override
-    public void addSub(String name, String url) {
+    public void addSub(DtoSubscriber dto) {
         SubscriptionURL entity = new SubscriptionURL();
 
-        if (name != null && url != null) {
-            entity.setName(name);
-            entity.setUrl(url);
-        }
+        if (repoSubscriptionURL.existsByName(dto.getName())) {
+            entity = repoSubscriptionURL.getByName(dto.getName());
+            entity.setUrl(dto.getUrl());
+        } else
+            entity.setName(dto.getName());
+        entity.setUrl(dto.getUrl());
 
         entity = repoSubscriptionURL.saveAndFlush(entity);
         log.debug("  _. add new Subscription with id: {}", entity.getId());
-    }
-
-    @Override
-    public void updateSub(String name, String url) {
-
-        SubscriptionURL entity = repoSubscriptionURL.findByName(name)
-                .orElseThrow(() -> new NotFoundException(name, SubscriptionURL.class.getName()));
-
-        if (url != null) {
-            entity.setUrl(url);
-        }
-
-        repoSubscriptionURL.saveAndFlush(entity);
-        log.debug("  _. update Subscription with id: {}", entity.getId());
     }
 
     @Override
@@ -73,16 +62,16 @@ public class ServicePurchaseImpl implements ServicePurchase {
     public void notifySub() {
         List<SubscriptionURL> urlList = repoSubscriptionURL.findAll();
 
-//        if (!urlList.isEmpty()) {
-//            for (SubscriptionURL sub:urlList
-//                 ) {
-//                DtoMessage dto = generateMessage.generate();
-//                sendMessage.send(sub.getUrl(),dto);
-//                log.debug(" _. successful sending message");
-//            }
-//        }
-        DtoMessage dto = generateMessage.generate();
-        sendMessage.send("http://localhost:8090/api/subscriber/", dto);
+        if (!urlList.isEmpty()) {
+            for (SubscriptionURL sub:urlList
+                 ) {
+                DtoMessage dto = generateMessage.generate();
+                sendMessage.send(sub.getUrl(),dto);
+                log.debug(" _. successful sending message");
+            }
+        }
+//        DtoMessage dto = generateMessage.generate();
+//        sendMessage.send("http://localhost:8090/api/subscriber/", dto);
         //после каждой с url
     }
 }

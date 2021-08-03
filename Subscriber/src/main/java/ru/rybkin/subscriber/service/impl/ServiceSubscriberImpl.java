@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.rybkin.subscriber.api.exception.NotFoundException;
 import ru.rybkin.subscriber.dto.DtoMessage;
+import ru.rybkin.subscriber.dto.DtoRequest;
 import ru.rybkin.subscriber.dto.DtoSubscribe;
 import ru.rybkin.subscriber.entity.Purchase;
 import ru.rybkin.subscriber.entity.Subscriber;
@@ -57,20 +58,20 @@ public class ServiceSubscriberImpl implements ServiceSubscriber {
     }
 
     @Override
-    public void subscribe(String url) {
+    public void subscribe(DtoRequest dto) {
         RestTemplate restTemplate = new RestTemplate();
 
-        DtoSubscribe dtoSubscribe = new DtoSubscribe("name", "homeURL");
+        DtoSubscribe dtoSubscribe = new DtoSubscribe(name, homeURL);
 
-        DtoSubscribe insertedDto = restTemplate.postForObject(url, dtoSubscribe, DtoSubscribe.class);
-        log.debug(" _.insert name: {}, url: {} on url: {}", insertedDto.getName(), insertedDto.getUrl(), url);
+        restTemplate.postForObject(dto.getUrl(), dtoSubscribe, DtoSubscribe.class);
+        log.debug(" _.insert name: {}, homeURL: {} on url: {}", name, homeURL, dto.getUrl());
     }
 
     @Override
-    public void unsubscribe(String url) {
+    public void unsubscribe(DtoRequest dto) {
         RestTemplate restTemplate = new RestTemplate();
 
-        restTemplate.getForObject(url, String.class);
-        log.debug(" _.has been sent: {}", url);
+        restTemplate.delete(dto.getUrl(), name);//todo: не работает
+        log.debug(" _.has been sent: {}", dto.getUrl());
     }
 }

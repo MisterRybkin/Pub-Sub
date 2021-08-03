@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.rybkin.subscriber.dto.DtoMessage;
+import ru.rybkin.subscriber.dto.DtoRequest;
 import ru.rybkin.subscriber.service.ServiceSubscriber;
 
 import javax.validation.Valid;
@@ -24,7 +25,7 @@ public class ApiSubscriber {
     }
 
     @PostMapping("/subscribe")
-    public ResponseEntity<HttpStatus> subscribe(@RequestBody @NotBlank String url) {
+    public ResponseEntity<HttpStatus> subscribe(@RequestBody @NotBlank DtoRequest url) {
         log.info("-> subscribe on: {}", url);
         serviceSubscriber.subscribe(url);
         log.info("<- subscribe on: {}", url);
@@ -32,7 +33,7 @@ public class ApiSubscriber {
     }
 
     @PostMapping("/unsubscribe")
-    public ResponseEntity<HttpStatus> unsubscribe(@RequestBody @NotBlank String url) {
+    public ResponseEntity<HttpStatus> unsubscribe(@RequestBody @NotBlank DtoRequest url) {
         log.info("-> unsubscribe on url: {}", url);
         serviceSubscriber.unsubscribe(url);
         log.info("<- unsubscribe on url: {}", url);

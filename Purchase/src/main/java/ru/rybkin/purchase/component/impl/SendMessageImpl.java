@@ -16,6 +16,7 @@ public class SendMessageImpl implements SendMessage {
         RestTemplate restTemplate = new RestTemplate();
 
         DtoMessage insertedDto = restTemplate.postForObject(url, dtoMessage, DtoMessage.class);
+        //todo:обработка неккоретных отправок
         log.debug(" _.insert dto: {}", insertedDto);
     }
 }

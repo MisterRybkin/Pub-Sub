@@ -1,6 +1,17 @@
-POST http://localhost:8090/api/subscriber/subscribe
+### отписаться от уведомлений
+POST http://localhost:8090/api/subscriber/unsubscribe
 Content-Type: application/json
 
 {
   "url": "http://localhost:8080/api/purchase/"
 }
+
+### подписаться на уведомления
+POST http://localhost:8090/api/subscriber/subscribe/
+Content-Type: application/json
+
+{
+  "url": "http://localhost:8080/api/purchase/"
+}
+
+
