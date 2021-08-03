@@ -7,4 +7,4 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/purchase/notify
+GET http://localhost:8080/api/purchase/notify

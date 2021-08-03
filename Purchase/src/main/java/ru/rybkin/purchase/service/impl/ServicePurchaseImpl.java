@@ -73,11 +73,16 @@ public class ServicePurchaseImpl implements ServicePurchase {
     public void notifySub() {
         List<SubscriptionURL> urlList = repoSubscriptionURL.findAll();
 
-        if (!urlList.isEmpty()) {
-            DtoMessage dto = generateMessage.generate();
-            sendMessage.send(dto);
-            log.debug(" _. successful sending message");
-        }
+//        if (!urlList.isEmpty()) {
+//            for (SubscriptionURL sub:urlList
+//                 ) {
+//                DtoMessage dto = generateMessage.generate();
+//                sendMessage.send(sub.getUrl(),dto);
+//                log.debug(" _. successful sending message");
+//            }
+//        }
+        DtoMessage dto = generateMessage.generate();
+        sendMessage.send("http://localhost:8090/api/subscriber/", dto);
         //после каждой с url
     }
 }
