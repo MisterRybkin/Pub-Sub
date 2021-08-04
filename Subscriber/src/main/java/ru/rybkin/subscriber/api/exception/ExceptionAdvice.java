@@ -45,4 +45,24 @@ public class ExceptionAdvice {
         e.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
     }
+
+    @ResponseBody
+    @ExceptionHandler(RequestClientException.class)
+    ResponseEntity<Map<String, String>> requestClientExceptionHandler(RequestClientException ex) {
+        Map<String, String> e = new HashMap<>();
+        log.error(ex.getMessage());
+        e.put("error", ex.getClass().getSimpleName());
+        e.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(RequestServerException.class)
+    ResponseEntity<Map<String, String>> requestServerExceptionHandler(RequestServerException ex) {
+        Map<String, String> e = new HashMap<>();
+        log.error(ex.getMessage());
+        e.put("error", ex.getClass().getSimpleName());
+        e.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+    }
 }

@@ -3,8 +3,10 @@ package ru.rybkin.subscriber.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import ru.rybkin.subscriber.api.exception.NotFoundException;
+import ru.rybkin.subscriber.api.exception.RequestClientException;
+import ru.rybkin.subscriber.component.SendRequest;
 import ru.rybkin.subscriber.dto.DtoMessage;
 import ru.rybkin.subscriber.dto.DtoRequest;
 import ru.rybkin.subscriber.dto.DtoSubscribe;
@@ -27,11 +29,14 @@ public class ServiceSubscriberImpl implements ServiceSubscriber {
 
     private final RepoSubscriber repoSubscriber;
     private final RepoPurchase repoPurchase;
+    private final SendRequest sendRequest;
 
     public ServiceSubscriberImpl(RepoSubscriber repoSubscriber,
-                                 RepoPurchase repoPurchase) {
+                                 RepoPurchase repoPurchase,
+                                 SendRequest sendRequest) {
         this.repoSubscriber = repoSubscriber;
         this.repoPurchase = repoPurchase;
+        this.sendRequest = sendRequest;
     }
 
     @Override
@@ -61,19 +66,24 @@ public class ServiceSubscriberImpl implements ServiceSubscriber {
 
     @Override
     public void subscribe(DtoRequest dto) {
-        RestTemplate restTemplate = new RestTemplate();
 
         DtoSubscribe dtoSubscribe = new DtoSubscribe(name, homeURL);
 
-        restTemplate.postForObject(dto.getUrl(), dtoSubscribe, DtoSubscribe.class);
+        sendRequest.post(dto.getUrl(), dtoSubscribe)
+                .subscribe();
         log.debug(" _.insert name: {}, homeURL: {} on url: {}", name, homeURL, dto.getUrl());
     }
 
     @Override
     public void unsubscribe(DtoRequest dto) {
-        RestTemplate restTemplate = new RestTemplate();
 
-        restTemplate.delete(dto.getUrl(), name);//todo: не работает
+        try {
+            sendRequest.delete(dto.getUrl(), name)
+                    .subscribe();
+        } catch (RequestClientException ex) {
+
+        }
+
         log.debug(" _.has been sent: {}", dto.getUrl());
     }
 }

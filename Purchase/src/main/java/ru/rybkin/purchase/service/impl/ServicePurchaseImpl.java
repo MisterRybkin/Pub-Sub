@@ -15,6 +15,7 @@ import ru.rybkin.purchase.entities.SubscriptionURL;
 import ru.rybkin.purchase.repositories.RepoSubscriptionURL;
 import ru.rybkin.purchase.service.ServicePurchase;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,10 +51,12 @@ public class ServicePurchaseImpl implements ServicePurchase {
     }
 
     @Override
+    @Transactional
     public void removeSub(String name) {
 
         if (repoSubscriptionURL.existsByName(name)) {
             repoSubscriptionURL.deleteByName(name);
+            log.debug("  _. successful delete with name: {}", name);
         } else {
             throw new NotFoundException(name, SubscriptionURL.class.getName());
         }
