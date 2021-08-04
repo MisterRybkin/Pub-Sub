@@ -41,10 +41,10 @@ public class ApiSubscriber {
     }
 
     @PostMapping("/")
-    public ResponseEntity<HttpStatus> acceptMessage(@Valid @RequestBody DtoMessage dto) {
+    public DtoMessage acceptMessage(@Valid @RequestBody DtoMessage dto) {
         log.info("-> accept message: {}", dto.toString());
-        serviceSubscriber.acceptMessage(dto);
+        DtoMessage response = serviceSubscriber.acceptMessage(dto);
         log.info("<- accept message: {}", dto.toString());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return response;
     }
 }
