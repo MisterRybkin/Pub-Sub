@@ -3,7 +3,6 @@ package ru.rybkin.subscriber.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import ru.rybkin.subscriber.api.exception.NotFoundException;
 import ru.rybkin.subscriber.api.exception.RequestClientException;
 import ru.rybkin.subscriber.component.SendRequest;

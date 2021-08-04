@@ -2,10 +2,6 @@ package ru.rybkin.purchase.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 import ru.rybkin.purchase.api.exceptions.NotFoundException;
 import ru.rybkin.purchase.component.GenerateMessage;
 import ru.rybkin.purchase.component.SendMessage;
@@ -16,7 +12,6 @@ import ru.rybkin.purchase.repositories.RepoSubscriptionURL;
 import ru.rybkin.purchase.service.ServicePurchase;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
