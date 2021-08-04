@@ -2,6 +2,10 @@ package ru.rybkin.purchase.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import ru.rybkin.purchase.api.exceptions.NotFoundException;
 import ru.rybkin.purchase.component.GenerateMessage;
 import ru.rybkin.purchase.component.SendMessage;
@@ -11,6 +15,7 @@ import ru.rybkin.purchase.entities.SubscriptionURL;
 import ru.rybkin.purchase.repositories.RepoSubscriptionURL;
 import ru.rybkin.purchase.service.ServicePurchase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -66,12 +71,11 @@ public class ServicePurchaseImpl implements ServicePurchase {
             for (SubscriptionURL sub:urlList
                  ) {
                 DtoMessage dto = generateMessage.generate();
-                sendMessage.send(sub.getUrl(),dto);
+                sendMessage.send(sub.getUrl(), dto)
+                        .subscribe(dtoMessage -> log.debug("response Subscribe: {}", dtoMessage));
                 log.debug(" _. successful sending message");
             }
         }
-//        DtoMessage dto = generateMessage.generate();
-//        sendMessage.send("http://localhost:8090/api/subscriber/", dto);
-        //после каждой с url
+
     }
 }

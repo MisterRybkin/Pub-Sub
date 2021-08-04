@@ -35,7 +35,7 @@ public class ServiceSubscriberImpl implements ServiceSubscriber {
     }
 
     @Override
-    public void acceptMessage(DtoMessage dto) {
+    public DtoMessage acceptMessage(DtoMessage dto) {
 
         switch (dto.getAction().toUpperCase()) {
             case "SUBSCRIPTION":
@@ -43,15 +43,17 @@ public class ServiceSubscriberImpl implements ServiceSubscriber {
                 subscriber.setMsisdn(dto.getMsisdn());
                 subscriber.setTimestamp(dto.getTimestamp());
                 subscriber = repoSubscriber.saveAndFlush(subscriber);
+                dto.setId(subscriber.getId());
                 log.debug("  _. save message with type: {}, id: {}", subscriber.getClass().getSimpleName(), subscriber.getId());
-                break;
+                return dto;
             case "PURCHASE":
                 Purchase purchase = new Purchase();
                 purchase.setMsisdn(dto.getMsisdn());
                 purchase.setTimestamp(dto.getTimestamp());
                 purchase = repoPurchase.saveAndFlush(purchase);
+                dto.setId(purchase.getId());
                 log.debug("  _. save message with type: {}, id: {}", purchase.getClass().getSimpleName(), purchase.getId());
-                break;
+                return dto;
             default:
                 throw new NotFoundException(dto.getAction(), "action");
         }

@@ -6,7 +6,7 @@ import ru.rybkin.subscriber.dto.DtoRequest;
 
 public interface ServiceSubscriber {
 
-    void acceptMessage(DtoMessage dto);
+    DtoMessage acceptMessage(DtoMessage dto);
 
     void subscribe(DtoRequest url);
 
